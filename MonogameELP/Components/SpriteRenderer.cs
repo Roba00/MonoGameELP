@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MonogameELP.Components
 {
-    class SpriteRenderer
+    public class SpriteRenderer
     {
         public Texture2D Texture { get; private set; }
 

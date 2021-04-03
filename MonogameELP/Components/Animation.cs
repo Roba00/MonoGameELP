@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MonogameELP.Components
 {
-    class Animation
+    public class Animation
     {
         private Texture2D texture;
         public int CurrentFrame { get; set; }
@@ -18,14 +18,14 @@ namespace MonogameELP.Components
         public int FrameWidth { get { return texture.Width / TotalFramesInTexture; } }
         public bool IsLooping { get; set; }
 
-        public Animation(Texture2D texture, int frameStart, int frameEnd, int frameTotalInTexture, float frameSpeed)
+        public Animation(Texture2D texture, int frameStart, int frameEnd, int frameTotalInTexture, float frameSpeed, bool isLooping)
         {
             this.texture = texture;
             FrameStart = frameStart;
             FrameEnd = frameEnd;
             TotalFramesInTexture = frameTotalInTexture;
             FrameSpeed = frameSpeed;
-            IsLooping = true;
+            IsLooping = isLooping;
         }
     }
 }

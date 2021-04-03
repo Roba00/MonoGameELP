@@ -6,14 +6,16 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MonogameELP.Components
 {
-    class Animator
+    public class Animator
     {
         private Animation animation;
+        private Animation defaultAnimation;
         private float timer;
 
-        public Animator(Animation animation)
+        public Animator(Animation defaultAnimation)
         {
-            this.animation = animation;
+            animation = defaultAnimation;
+            this.defaultAnimation = defaultAnimation;
         }
 
         public void Update(GameTime gameTime)
@@ -27,30 +29,37 @@ namespace MonogameELP.Components
 
                 if (animation.CurrentFrame > animation.FrameEnd)
                 {
-                    animation.CurrentFrame = animation.FrameStart;
+                    if (!animation.IsLooping)
+                    {
+                        animation = defaultAnimation;
+                    }
+                    else
+                    {
+                        animation.CurrentFrame = animation.FrameStart;
+                    }
                 }
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch, Texture2D texture, Vector2 position)
+        public void Draw(SpriteBatch spriteBatch, Texture2D texture, Transform transform)
         {
             spriteBatch.Draw(texture: texture,
-                             position: position,
+                             position: transform.Position,
                              sourceRectangle: new Rectangle(x: animation.CurrentFrame * animation.FrameWidth,
                                                            y: 0,
                                                            width: animation.FrameWidth,
                                                            height: animation.FrameHeight),
                              color: Color.White,
                              rotation: 0f,
-                             origin: new Vector2(animation.FrameWidth/2, animation.FrameHeight/2),
-                             scale: 6.25f,
+                             origin: new Vector2(animation.FrameWidth*0.25f, animation.FrameHeight*0.75f),
+                             scale: transform.Scale,
                              effects: SpriteEffects.None,
                              layerDepth: 0.5f);
         }
         
         public void Play(Animation animation)
         {
-            if (this.animation == animation)
+            if (this.animation == animation || !this.animation.IsLooping)
                 return;
             this.animation = animation;
             this.animation.CurrentFrame = this.animation.FrameStart;
@@ -63,5 +72,9 @@ namespace MonogameELP.Components
             animation.CurrentFrame = animation.FrameStart;
         }
 
+        public Animation GetState()
+        {
+            return animation;
+        }
     }
 }

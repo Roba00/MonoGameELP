@@ -25,6 +25,12 @@
 /processorParam:TextureFormat=Color
 /build:Background.png
 
+#begin DynasticSong.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:DynasticSong.wav
+
 #begin Player-Sheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -36,4 +42,10 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Player-Sheet.png
+
+#begin Videogame.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Videogame.wav
 
