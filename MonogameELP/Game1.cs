@@ -36,6 +36,9 @@ namespace MonogameELP
         private SoundEffect dynasticSong;
         private AudioSource musicSource;
 
+        private Level1Tilemap tilemap1;
+        public Texture2D tilemap1Texture;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -47,12 +50,12 @@ namespace MonogameELP
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
             _graphics.PreferredBackBufferWidth = 128*8;
             _graphics.PreferredBackBufferHeight = 64*8;
             _graphics.ApplyChanges();
             bgPos = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 2);
             colliders = new List<BoxCollider>();
+
             plyr = new Player();
             plyr.Initialize();
 
@@ -71,6 +74,9 @@ namespace MonogameELP
                 System.Diagnostics.Debug.WriteLine(colliders[i]);
             }
 
+            tilemap1 = new Level1Tilemap();
+            tilemap1.Initialize();
+
             base.Initialize();
         }
 
@@ -82,14 +88,17 @@ namespace MonogameELP
             musicSource = new AudioSource(happyTune, true, 0.5f, 0f, 0f);
             musicSource.Play();
 
-            // TODO: use this.Content to load your game content here
             bg = Content.Load<Texture2D>("Background");
             bgOrg = new Vector2(bg.Width / 2, bg.Height / 2);
 
             plyrTxtr = Content.Load<Texture2D>("Player-Sheet");
+            plyr.LoadContent();
+
             groundTxtr = new Texture2D(GraphicsDevice, 1, 1);
             groundTxtr.SetData(new[] { Color.White });
-            plyr.LoadContent();
+
+            tilemap1Texture = Content.Load<Texture2D>("Ground");
+            tilemap1.LoadContent();
         }
 
         protected override void Update(GameTime gameTime)
@@ -117,12 +126,13 @@ namespace MonogameELP
                                rasterizerState:RasterizerState.CullNone,
                                effect:null,
                                transformMatrix:cameraTransform);
-                _spriteBatch.Draw(bg, bgPos, null, Color.White, 0f, bgOrg, new Vector2(8f,8f), SpriteEffects.None, 0f);
-                _spriteBatch.Draw(groundTxtr, groundCol.Rectangle, Color.White);
+                //    _spriteBatch.Draw(bg, bgPos, null, Color.White, 0f, bgOrg, new Vector2(8f,8f), SpriteEffects.None, 0f);
+                //_spriteBatch.Draw(groundTxtr, groundCol.Rectangle, Color.White);
+                tilemap1.DrawTiles(tilemap1Texture, GraphicsDevice, _spriteBatch);
                 plyr.Draw(_spriteBatch);
             _spriteBatch.End();
-            //float frameRate = (float)Math.Round(1 / gameTime.ElapsedGameTime.TotalSeconds);
-            //System.Diagnostics.Debug.WriteLine(frameRate + " fps");
+            float frameRate = (float)Math.Round(1 / gameTime.ElapsedGameTime.TotalSeconds);
+            System.Diagnostics.Debug.WriteLine(frameRate + " fps");
             base.Draw(gameTime);
         }
     }

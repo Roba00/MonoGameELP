@@ -6,24 +6,60 @@ using Microsoft.Xna.Framework;
 namespace MonogameELP.Components
 {
     //WIP
+    //TODO: Work on collision detection
     class Tile
     {
-        readonly int TILE_SIZE = 32;
+        public readonly int TILE_SIZE = 16;
 
         TileMap tileMap; // Tile map that the tile is from.
-        Vector2 worldPos; // Tile position in world cooridnates
+        public Transform transform { get; private set; }
+        public BoxCollider collider;
+
         Vector2 tilePos;  // Tile position in tile cooridnates
+        Vector2 worldPos; // Tile position in world cooridnates
         int[] tileNumber;  // Tile number in the tilemap. Mapped in [x,y].
+
         public enum TileColliderType {Block, SteepTriangle, SlightTriangle, Null}; // Defines the collider types.
         public TileColliderType tileCollider; // What collider type the tile has.
 
-        public Tile(TileMap tileMap, Vector2 tilePos, int[] tileNumber)
+        public Tile(TileMap tileMap, int[] tileNumber, Vector2 tilePos)
+        {
+
+            this.tileMap = tileMap;
+            this.tileNumber = tileNumber;
+            this.tilePos = tilePos;
+            worldPos = tilePos * TILE_SIZE;
+            tileCollider = tileMap.GetTileColliderType(tileNumber);
+
+            transform = new Transform();
+            transform.Rotation = 0f;
+            transform.Scale = new Vector2(8f, 8f);
+            transform.Position = worldPos * transform.Scale.X;
+        }
+
+        public Tile(TileMap tileMap, int[] tileNumber)
         {
             this.tileMap = tileMap;
-            this.worldPos = worldPos;
-            this.tilePos = worldPos / TILE_SIZE;
             this.tileNumber = tileNumber;
             tileCollider = tileMap.GetTileColliderType(tileNumber);
+
+            transform = new Transform();
+            transform.Rotation = 0f;
+            transform.Scale = new Vector2(8f, 8f);
+            transform.Position = Vector2.Zero;
+
+        }
+
+        public int[] getTileNumber()
+        {
+            return tileNumber;
+        }
+
+        public void SetTilePosition(Vector2 tilePos)
+        {
+            this.tilePos = tilePos;
+            worldPos = tilePos * TILE_SIZE;
+            transform.Position = worldPos*transform.Scale.X;
         }
     }
 }

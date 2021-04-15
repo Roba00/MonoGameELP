@@ -7,31 +7,25 @@ using Microsoft.Xna.Framework.Graphics;
 namespace MonogameELP.Components
 {
     // WIP
-    class TileMap
+    abstract class TileMap
     {
-        public Tile.TileColliderType GetTileColliderType(int[] tileNum)
-        {
-            return Tile.TileColliderType.Null;
-        }
+        public virtual int TILEMAP_WIDTH { get; set; }
+        public virtual int TILEMAP_HEIGHT { get; set; }
 
-        public Texture2D GetTileTexture()
-        {
-            return null;
-        }
+        public abstract Tile.TileColliderType GetTileColliderType(int[] tileNum);
 
-        public Tile MatchTileWithPosition(int[] tileNum)
-        {
-            return null;
-        }
+        public abstract Dictionary<String, Tile> GetTile();
 
-        public void CreateTiles()
-        {
+        public abstract float[] TileToWorldPos(int[] tilePos);
 
-        }
+        public abstract List<Tile> LevelTiles();
 
-        public void DrawTiles()
-        {
+        public abstract void Initialize();
 
-        }
+        public abstract void LoadContent();
+
+        public abstract void Update();
+
+        public abstract void DrawTiles(Texture2D texture, GraphicsDevice graphics, SpriteBatch spriteBatch);
     }
 }

@@ -40,6 +40,11 @@ namespace MonogameELP.Components
             return Keyboard.GetState().IsKeyDown(Keys.Up);
         }
 
+        public static bool GetDown()
+        {
+            return Keyboard.GetState().IsKeyDown(Keys.Down);
+        }
+
         public static bool GetZ()
         {
             return currentKeyState.IsKeyDown(Keys.Z);

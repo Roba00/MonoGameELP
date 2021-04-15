@@ -5,8 +5,8 @@ using MonogameELP.Components;
 
 namespace MonogameELP.Gameobjects
 {
-    public class GameObject
+    abstract class GameObject
     {
-        public readonly Transform Transform;
+        public virtual Transform transform {get; set;}
     }
 }
