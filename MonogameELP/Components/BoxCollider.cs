@@ -14,9 +14,13 @@ namespace MonogameELP.Components
         public Rectangle Rectangle { get; private set; }
         private Rectangle intersectionRectangle;
         private bool isCollision;
+        private bool isGrounded;
         private bool isKinematic;
         private int colliderIndex;
-        public BoxCollider(Transform tf,bool isKinematic)
+        private bool isTrigger;
+        private Vector2 scaleMultiplier;
+        private String tag;
+        public BoxCollider(Transform tf,bool isKinematic, bool isTrigger, String tag)
         {
             //this.gameObject = gameObject;
             this.tf = tf;
@@ -27,30 +31,80 @@ namespace MonogameELP.Components
             Game1.colliders.Add(this);
             colliderIndex = Game1.colliders.IndexOf(this);
             this.isKinematic = isKinematic;
+            this.isTrigger = isTrigger;
+            this.scaleMultiplier = new Vector2(1, 1);
+            this.tag = tag;
+        }
+
+        public BoxCollider(Transform tf, bool isKinematic, bool isTrigger, Vector2 scaleMultiplier,String tag)
+        {
+            //this.gameObject = gameObject;
+            this.tf = tf;
+
+            Rectangle = new Rectangle((int)(tf.Position.X-scaleMultiplier.X),
+                (int)(tf.Position.Y-scaleMultiplier.Y), (int)(tf.Scale.X*scaleMultiplier.X),
+                (int)(tf.Scale.Y * scaleMultiplier.Y));
+            Game1.colliders.Add(this);
+            colliderIndex = Game1.colliders.IndexOf(this);
+            this.isKinematic = isKinematic;
+            this.isTrigger = isTrigger;
+            this.scaleMultiplier = scaleMultiplier;
+            this.tag = tag;
+        }
+
+        public BoxCollider(Transform tf, bool isKinematic, bool isTrigger)
+        {
+            //this.gameObject = gameObject;
+            this.tf = tf;
+
+            Rectangle = new Rectangle((int)tf.Position.X,
+                (int)tf.Position.Y, (int)tf.Scale.X,
+                (int)tf.Scale.Y);
+            Game1.colliders.Add(this);
+            colliderIndex = Game1.colliders.IndexOf(this);
+            this.isKinematic = isKinematic;
+            this.isTrigger = isTrigger;
+            this.scaleMultiplier = new Vector2(1, 1);
+            this.tag = null;
         }
 
         public void Update()
         {
-            //Rectangle.Offset(tf.Position.X, tf.Position.Y);
-            Rectangle = new Rectangle((int)tf.Position.X,
-                (int)tf.Position.Y, (int)tf.Scale.X,
-                (int)tf.Scale.Y);
-            /*if (colliderIndex == 0)
+            if (isKinematic)
             {
-                System.Diagnostics.Debug.WriteLine("Player Y Box: " + tf.Position.Y);
-                System.Diagnostics.Debug.WriteLine("Rectangle Y: " + Rectangle.Location.Y);
-            }*/
+                if (scaleMultiplier.Y == 1)
+                {
+                    Rectangle = new Rectangle((int)tf.Position.X,
+                    (int)tf.Position.Y, (int)tf.Scale.X,
+                    (int)tf.Scale.Y);
+                }
+                else //The player's collider
+                {
+                    if (tf.Scale.X > 0)
+                    {
+                        Rectangle = new Rectangle((int)(tf.Position.X - 30),
+                        (int)(tf.Position.Y - 57), Math.Abs((int)(tf.Scale.X * scaleMultiplier.X)),
+                        (int)(tf.Scale.Y * scaleMultiplier.Y));
+                    }
+                    else
+                    {
+                        Rectangle = new Rectangle((int)(tf.Position.X - 10),
+                        (int)(tf.Position.Y - 57), Math.Abs((int)(tf.Scale.X * scaleMultiplier.X)),
+                        (int)(tf.Scale.Y * scaleMultiplier.Y));
+                    }
+                }
+            }
+
             if (isKinematic)
             {
                 CheckCollisions();
-                ReactCollision();
             }
         }
 
         public void CheckCollisions()
         {
-            //Rectangle lowerRectangle = new Rectangle(Rectangle.X, Rec);
             isCollision = false;
+            isGrounded = false;
 
             for (int i=0; i < Game1.colliders.Count; i++)
             {
@@ -58,21 +112,41 @@ namespace MonogameELP.Components
                 {
                     if (Rectangle.Intersects(Game1.colliders[i].Rectangle))
                     {
-                        System.Diagnostics.Debug.WriteLine("Collision 1! Index " + colliderIndex + " collided with " + i);
-                        intersectionRectangle = Rectangle.Intersect(Rectangle, Game1.colliders[i].Rectangle);
+                        //System.Diagnostics.Debug.WriteLine("Collision 1! Index " + colliderIndex + " collided with " + i);
+                        Rectangle otherRect = Game1.colliders[i].Rectangle;
                         isCollision = true;
+                        ReactCollision(otherRect);
                     }
                 }
             }
         }
 
-        public void ReactCollision()
+        public void ReactCollision(Rectangle otherRect)
         {
-            if (isCollision)
+            intersectionRectangle = Rectangle.Intersect(Rectangle, otherRect);
+
+            if (Rectangle.Top <= otherRect.Bottom)
             {
-                if (intersectionRectangle.Height > 1f) //Prevents jittering
+                isGrounded = true;
+            }
+
+
+            if (intersectionRectangle.Height > 1f //Prevents jittering
+                            && intersectionRectangle.Height < 3f
+                            && Rectangle.Bottom > otherRect.Top
+                            && Rectangle.Bottom < otherRect.Bottom)  //Prevents translating when intersected through X axis
+            {
+                tf.Translate(0, -intersectionRectangle.Height);
+            }
+            if (intersectionRectangle.Width > 0f && intersectionRectangle.Width < 3f && Math.Abs(Rectangle.Bottom - otherRect.Top) > 0f)
+            {
+                if (Rectangle.Left > otherRect.Left)
                 {
-                    tf.Translate(0, -intersectionRectangle.Height);
+                    tf.Translate(intersectionRectangle.Width, 0);
+                }
+                if (Rectangle.Right < otherRect.Right)
+                {
+                    tf.Translate(-intersectionRectangle.Width, 0);
                 }
             }
         }
@@ -94,9 +168,9 @@ namespace MonogameELP.Components
             return false;
         }*/
 
-        public bool isGrounded()
+        public bool IsGrounded()
         {
-            return isCollision;
+            return isGrounded;
         }
     }
 }

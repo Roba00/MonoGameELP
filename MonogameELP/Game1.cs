@@ -63,7 +63,7 @@ namespace MonogameELP
             groundTf.Position = new Vector2(0, 385f);
             groundTf.Rotation = 0f;
             groundTf.Scale = new Vector2(_graphics.PreferredBackBufferWidth, 50f);
-            groundCol = new BoxCollider(groundTf, false);
+            //groundCol = new BoxCollider(groundTf, false);
 
             //cameraTransform = new Matrix();
             //cameraTarget = new Vector3(plyr.transform.Position.X, plyr.transform.Position.Y, -100);
@@ -104,7 +104,8 @@ namespace MonogameELP
         protected override void Update(GameTime gameTime)
         {
             plyr.Update(gameTime);
-            groundCol.Update();
+            tilemap1.Update();
+            //groundCol.Update();
 
             //cameraTarget = new Vector3(plyr.transform.Position.X, plyr.transform.Position.Y, 0);
             //cameraTransform = Matrix.CreateLookAt(cameraPosition, cameraTarget, Vector3.Up);
@@ -132,7 +133,7 @@ namespace MonogameELP
                 plyr.Draw(_spriteBatch);
             _spriteBatch.End();
             float frameRate = (float)Math.Round(1 / gameTime.ElapsedGameTime.TotalSeconds);
-            System.Diagnostics.Debug.WriteLine(frameRate + " fps");
+            //System.Diagnostics.Debug.WriteLine(frameRate + " fps");
             base.Draw(gameTime);
         }
     }

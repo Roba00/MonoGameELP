@@ -14,7 +14,15 @@ namespace MonogameELP.Gameobjects
 
         public override Tile.TileColliderType GetTileColliderType(int[] tileNum)
         {
-            return Tile.TileColliderType.Null;
+            /*if (GetTile()["Ground"].getTileNumber() == tileNum)
+            {
+
+            }
+            if (GetTile()["Ground"].getTileNumber() == tileNum)
+            {
+
+            }*/
+            return Tile.TileColliderType.Block;
         }
 
         public override Dictionary<String, Tile> GetTile()
@@ -41,27 +49,43 @@ namespace MonogameELP.Gameobjects
 
         public override List<Tile> LevelTiles()
         {
+            //System.Diagnostics.Debug.WriteLine("COLLIDER 2");
             List < Tile > levelTiles = new List<Tile>();
 
             Tile tile0 = GetTile()["Left Steep Triangle"];
             tile0.SetTilePosition(new Vector2(1, 3));
+            tile0.CreateCollider();
             levelTiles.Add(tile0);
 
             Tile tile1 = GetTile()["Ground"];
             tile1.SetTilePosition(new Vector2(2, 3));
+            tile1.CreateCollider();
             levelTiles.Add(tile1);
 
             Tile tile2 = GetTile()["Ground"];
             tile2.SetTilePosition(new Vector2(3, 3));
+            tile2.CreateCollider();
             levelTiles.Add(tile2);
 
             Tile tile3 = GetTile()["Ground"];
             tile3.SetTilePosition(new Vector2(4, 3));
+            tile3.CreateCollider();
             levelTiles.Add(tile3);
 
             Tile tile4 = GetTile()["Right Steep Triangle"];
             tile4.SetTilePosition(new Vector2(5, 3));
+            tile4.CreateCollider();
             levelTiles.Add(tile4);
+
+            Tile tile5 = GetTile()["Ground"];
+            tile5.SetTilePosition(new Vector2(4, 2));
+            tile5.CreateCollider();
+            levelTiles.Add(tile5);
+
+            Tile tile6 = GetTile()["Ground"];
+            tile6.SetTilePosition(new Vector2(2, 2));
+            tile6.CreateCollider();
+            levelTiles.Add(tile6);
 
             return levelTiles;
         }
@@ -71,20 +95,26 @@ namespace MonogameELP.Gameobjects
 
         }
 
+        List<Tile> levelTiles;
         public override void LoadContent()
         {
             TILEMAP_WIDTH = 12;
             TILEMAP_HEIGHT = 7;
+
+            levelTiles = LevelTiles();
         }
 
         public override void Update()
         {
-
+            levelTiles.ForEach(delegate (Tile tile)
+            {
+                tile.UpdateCollider();
+            });
         }
 
         public override void DrawTiles(Texture2D texture, GraphicsDevice graphics, SpriteBatch spriteBatch)
         {
-            LevelTiles().ForEach(delegate (Tile tile)
+            levelTiles.ForEach(delegate (Tile tile)
             {
                 spriteBatch.Draw(texture: texture,
                 position: tile.transform.Position,
@@ -92,9 +122,14 @@ namespace MonogameELP.Gameobjects
                 color: Color.White,
                 rotation: tile.transform.Rotation,
                 origin: new Vector2(0, 0),
-                scale: tile.transform.Scale,
+                scale: tile.transform.Scale/16f,
                 effects: SpriteEffects.None,
                 layerDepth: 0.5f);
+
+                /*Texture2D groundTxtr = new Texture2D(graphics, 1, 1);
+                groundTxtr.SetData(new[] { Color.White });
+                //System.Diagnostics.Debug.WriteLine(tile.GetBoxCollider().Rectangle);
+                spriteBatch.Draw(groundTxtr, tile.transform.Position, new Rectangle(x: tile.getTileNumber()[0] * tile.TILE_SIZE, y: tile.getTileNumber()[1] * tile.TILE_SIZE, width: 16, height: 16), Color.White, 0, Vector2.Zero, tile.transform.Scale/16f, SpriteEffects.None, 1f);*/
             });
         }
 

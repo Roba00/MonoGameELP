@@ -88,7 +88,7 @@ namespace MonogameELP.Components
 
         public void Gravity(float mass)
         {
-            if (!collider.isGrounded())
+            if (!collider.IsGrounded())
             {
                 SetAcceleration(Acceleration.X, 9.81f * GravityScale);
             }

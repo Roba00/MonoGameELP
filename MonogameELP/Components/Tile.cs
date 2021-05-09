@@ -47,7 +47,6 @@ namespace MonogameELP.Components
             transform.Rotation = 0f;
             transform.Scale = new Vector2(8f, 8f);
             transform.Position = Vector2.Zero;
-
         }
 
         public int[] getTileNumber()
@@ -60,6 +59,25 @@ namespace MonogameELP.Components
             this.tilePos = tilePos;
             worldPos = tilePos * TILE_SIZE;
             transform.Position = worldPos*transform.Scale.X;
+        }
+
+        public void CreateCollider()
+        {
+            System.Diagnostics.Debug.WriteLine("COLLIDER 1");
+            Transform tf = transform;
+            tf.Scale = transform.Scale * TILE_SIZE;
+            tf.Scale = new Vector2(tf.Scale.X, tf.Scale.Y); // Removed the +10f to tf.Scale.X
+            collider = new BoxCollider(tf, false, false, "Ground");
+        }
+
+        public void UpdateCollider()
+        {
+            collider.Update();
+        }
+
+        public BoxCollider GetBoxCollider()
+        {
+            return collider;
         }
     }
 }

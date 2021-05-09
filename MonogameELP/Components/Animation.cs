@@ -17,6 +17,7 @@ namespace MonogameELP.Components
         public float FrameSpeed { get; set; }
         public int FrameWidth { get { return texture.Width / TotalFramesInTexture; } }
         public bool IsLooping { get; set; }
+        public int Repeats { get; set; }
 
         public Animation(Texture2D texture, int frameStart, int frameEnd, int frameTotalInTexture, float frameSpeed, bool isLooping)
         {
@@ -26,6 +27,18 @@ namespace MonogameELP.Components
             TotalFramesInTexture = frameTotalInTexture;
             FrameSpeed = frameSpeed;
             IsLooping = isLooping;
+            Repeats = 1;
+        }
+
+        public Animation(Texture2D texture, int frameStart, int frameEnd, int frameTotalInTexture, float frameSpeed, bool isLooping, int repeats)
+        {
+            this.texture = texture;
+            FrameStart = frameStart;
+            FrameEnd = frameEnd;
+            TotalFramesInTexture = frameTotalInTexture;
+            FrameSpeed = frameSpeed;
+            IsLooping = isLooping;
+            Repeats = repeats;
         }
     }
 }
